@@ -1,0 +1,221 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base Input Styles */
+input[type="text"],
+input[type="url"],
+input[type="number"],
+input[type="email"],
+textarea,
+select {
+  @apply w-full px-3 py-2 rounded-md text-xs;
+  @apply bg-gray-50 border border-gray-200;
+  @apply transition-all duration-200 ease-in-out;
+  @apply hover:border-blue-300 focus:border-blue-400;
+  @apply focus:ring-2 focus:ring-blue-100 focus:outline-none;
+  @apply placeholder:text-gray-400 text-gray-700;
+}
+
+/* Color Input */
+input[type="color"] {
+  @apply h-10 p-1 rounded-md cursor-pointer;
+  @apply bg-gradient-to-r from-gray-50 to-white;
+  @apply border border-gray-200;
+  @apply shadow-sm hover:shadow-md;
+  @apply transition-all duration-200;
+  @apply hover:border-blue-300;
+}
+
+/* Checkbox */
+input[type="checkbox"] {
+  @apply rounded transition-all duration-200;
+  @apply border-gray-300 text-blue-500;
+  @apply focus:ring-2 focus:ring-blue-100 focus:ring-offset-0;
+  @apply hover:border-blue-400;
+  @apply cursor-pointer;
+}
+
+/* Select */
+select {
+  @apply appearance-none bg-no-repeat cursor-pointer;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-size: 1.25em 1.25em;
+  @apply pr-10;
+}
+
+/* Label */
+label {
+  @apply block text-sm font-medium;
+  @apply text-gray-600 hover:text-gray-800;
+  @apply transition-all duration-200;
+  @apply cursor-pointer select-none;
+}
+
+/* Button */
+button {
+  @apply px-4 py-2 rounded-md;
+  @apply bg-gray-50 hover:bg-gray-100;
+  @apply border border-gray-200 hover:border-gray-300;
+  @apply text-gray-700 font-medium;
+  @apply transition-all duration-200;
+}
+
+/* Number Input */
+input[type="number"] {
+  @apply [appearance:textfield];
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  @apply appearance-none m-0;
+}
+
+/* Hover Effects */
+select:hover,
+textarea:hover {
+  @apply transform scale-[1.01];
+}
+
+/* Focus Effects */
+select:focus,
+textarea:focus {
+  @apply transform scale-[1.02];
+}
+
+/* Disabled State */
+input:disabled,
+select:disabled,
+textarea:disabled {
+  @apply opacity-50 cursor-not-allowed;
+  @apply hover:transform-none hover:border-gray-200;
+}
+
+/* Property Panel Groups */
+.property-group {
+  @apply space-y-4 p-4 rounded-lg;
+  @apply bg-white/50 backdrop-blur-sm;
+  @apply border border-gray-100;
+  @apply transition-all duration-200;
+  @apply hover:bg-white/80 hover:border-gray-200;
+  @apply shadow-sm hover:shadow;
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  @apply w-2;
+  @apply h-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100;
+  @apply rounded-md;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300;
+  @apply rounded-md;
+  @apply hover:bg-gray-400;
+  @apply transition-colors duration-200;
+}
+
+img {
+  @apply inline;
+}
+
+a {
+  @apply text-gray-400;
+}
+
+/* Range Input Styles */
+input[type="range"] {
+  @apply w-full h-6 rounded-lg appearance-none cursor-pointer;
+  @apply bg-transparent;
+  @apply transition-all duration-200;
+}
+
+/* Webkit (Chrome, Safari) */
+input[type="range"]::-webkit-slider-thumb {
+  @apply appearance-none;
+  @apply w-4 h-4 rounded-full;
+  @apply bg-gradient-to-b from-blue-500 to-blue-600;
+  @apply border-2 border-white;
+  @apply shadow-lg shadow-blue-500/25;
+  @apply transition-all duration-200;
+  @apply hover:scale-110 hover:shadow-xl;
+  @apply active:scale-95;
+  margin-top: -0.25rem; /* Adjusted for smaller thumb */
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  @apply h-2 rounded-lg;
+  @apply bg-gradient-to-r from-gray-200 to-gray-300;
+  @apply shadow-inner;
+}
+
+/* Firefox */
+input[type="range"]::-moz-range-thumb {
+  @apply appearance-none;
+  @apply w-4 h-4 rounded-full;
+  @apply bg-gradient-to-b from-blue-500 to-blue-600;
+  @apply border-2 border-white;
+  @apply shadow-lg shadow-blue-500/25;
+  @apply transition-all duration-200;
+  @apply hover:scale-110 hover:shadow-xl;
+  @apply active:scale-95;
+}
+
+input[type="range"]::-moz-range-track {
+  @apply h-2 rounded-lg;
+  @apply bg-gradient-to-r from-gray-200 to-gray-300;
+  @apply shadow-inner;
+}
+
+/* Focus State */
+input[type="range"]:focus {
+  @apply outline-none;
+}
+
+input[type="range"]:focus::-webkit-slider-thumb {
+  @apply ring-4 ring-blue-200;
+}
+
+input[type="range"]:focus::-moz-range-thumb {
+  @apply ring-4 ring-blue-200;
+}
+
+/* Hover State */
+input[type="range"]:hover::-webkit-slider-thumb {
+  @apply from-blue-600 to-blue-700;
+}
+
+input[type="range"]:hover::-moz-range-thumb {
+  @apply from-blue-600 to-blue-700;
+}
+
+/* Active/Pressed State */
+input[type="range"]:active::-webkit-slider-thumb {
+  @apply scale-95 shadow-md;
+}
+
+input[type="range"]:active::-moz-range-thumb {
+  @apply scale-95 shadow-md;
+}
+
+/* Disabled State */
+input[type="range"]:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+input[type="range"]:disabled::-webkit-slider-thumb {
+  @apply from-gray-400 to-gray-500 hover:scale-100 cursor-not-allowed;
+}
+
+input[type="range"]:disabled::-moz-range-thumb {
+  @apply from-gray-400 to-gray-500 hover:scale-100 cursor-not-allowed;
+}
+
+input[type="range"]:hover + .range-value {
+  @apply opacity-100;
+}

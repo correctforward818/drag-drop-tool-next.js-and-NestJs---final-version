@@ -1,0 +1,233 @@
+{
+  "builder": {
+    "components": {
+      "title": "Components",
+      "column": { "label": "Column" },
+      "text": { "label": "Text" },
+      "button": { "label": "Button" },
+      "image": { "label": "Image" },
+      "divider": { "label": "Divider" },
+      "social": { "label": "Social" },
+      "menu": { "label": "Menu" },
+      "embedhtml": { "label": "HTML" },
+      "heading": { "label": "Heading" }
+    },
+    "properties": {
+      "title": "Properties",
+      "noSelection": "Select an element to edit its properties",
+      "general": {
+        "title": "General",
+        "containerPadding": "Container Padding",
+        "moreOptions": "More Options",
+        "allSides": "All Sides",
+        "padding": {
+          "top": "Padding Top",
+          "right": "Padding Right",
+          "bottom": "Padding Bottom",
+          "left": "Padding Left"
+        }
+      },
+      "align": {
+        "left": "Left",
+        "center": "Center",
+        "right": "Right"
+      },
+      "actionTypeOptions": {
+        "openWebsite": "Open Website",
+        "sendEmail": "Send Email",
+        "callPhone": "Call Phone Number"
+      },
+      "targetOptions": {
+        "sameTab": "Same Tab",
+        "newTab": "New Tab"
+      },
+      "layoutOptions": {
+        "horizontal": "Horizontal",
+        "vertical": "Vertical"
+      },
+      "sharedStyles": {
+        "width": "Width",
+        "height": "Height",
+        "padding": "Padding",
+        "spacing": "Spacing",
+        "layout": "Layout",
+        "style": "Style",
+        "color": "Color",
+        "text": "Text",
+        "content": "Content",
+        "border": {
+          "label": "Border",
+          "width": "Width",
+          "style": "Style",
+          "color": "Color",
+          "radius": "Border Radius",
+          "positions": {
+            "top": "Top",
+            "right": "Right",
+            "bottom": "Bottom",
+            "left": "Left"
+          }
+        },
+        "font": {
+          "family": "Font Family",
+          "size": "Font Size",
+          "weight": "Font Weight",
+          "lineHeight": "Line Height",
+          "letterSpacing": "Letter Spacing"
+        },
+        "alignment": {
+          "label": "Alignment",
+          "textAlign": "Text Align",
+          "positions": {
+            "top": "Top",
+            "right": "Right",
+            "bottom": "Bottom",
+            "left": "Left",
+            "topLeft": "Top Left",
+            "topRight": "Top Right",
+            "bottomLeft": "Bottom Left",
+            "bottomRight": "Bottom Right"
+          }
+        },
+        "lineTypes": {
+          "solid": "Solid",
+          "dotted": "Dotted",
+          "dashed": "Dashed"
+        }
+      },
+      "column": {
+        "backgroundColor": "Background Color",
+        "columnValues": "Column Properties",
+        "columns": "Columns"
+      },
+      "row": {
+        "title": "Row Properties",
+        "backgroundColor": "Background Color",
+        "columnsBackgroundColor": "Columns Background Color",
+        "backgroundImage": {
+          "label": "Background Image",
+          "url": "Image URL",
+          "repeat": "Repeat",
+          "size": "Size",
+          "position": "Position"
+        },
+        "fullWidth": "Full Width"
+      },
+      "button": {
+        "link": "Link",
+        "colors": {
+          "background": "Background Color",
+          "text": "Text Color",
+          "hover": {
+            "background": "Hover Background Color",
+            "text": "Hover Text Color"
+          }
+        },
+        "size": {
+          "auto": {
+            "width": "Auto Width",
+            "height": "Auto Height"
+          }
+        },
+        "action": {
+          "label": "Action",
+          "type": "Action Type",
+          "url": "URL",
+          "target": "Target",
+          "email": {
+            "to": "Mail To",
+            "subject": "Subject",
+            "body": "Body"
+          },
+          "phone": {
+            "label": "Phone",
+            "number": "Phone Number"
+          }
+        },
+        "options": {
+          "label": "Button Options",
+          "auto": {
+            "on": "Auto On",
+            "off": "Auto Off"
+          }
+        }
+      },
+      "image": {
+        "source": "Image",
+        "url": "Image URL",
+        "altText": "Alternate Text",
+        "dimensions": "Dimensions",
+        "maxWidth": "Max Width",
+        "containerPadding": "Container Padding",
+        "auto": {
+          "off": "Auto Off",
+          "on": "Auto On"
+        }
+      },
+      "heading": {
+        "type": "Heading Type",
+        "weights": {
+          "regular": "Regular",
+          "bold": "Bold"
+        }
+      },
+      "menu": {
+        "items": {
+          "label": "Menu Items",
+          "add": "Add New Item"
+        },
+        "action": {
+          "type": "Action Type",
+          "label": "Label",
+          "url": "URL",
+          "target": "Target",
+          "email": {
+            "to": "Mail To",
+            "subject": "Subject",
+            "body": "Body"
+          },
+          "phone": "Phone"
+        },
+        "styles": {
+          "label": "Styles",
+          "colors": {
+            "text": "Text Color",
+            "link": "Link Color"
+          }
+        },
+        "separator": "Separator"
+      },
+      "divider": {
+        "line": "Line"
+      },
+      "unsupportedType": "Unsupported type",
+      "back": "Back"
+    },
+    "canvas": {
+      "dropContentHere": "Drop content here"
+    },
+    "deleteConfirm": {
+      "title": "Delete Content",
+      "message": "Are you sure you want to delete this content?"
+    },
+    "toast": {
+      "deleteSuccess": "Element deleted successfully",
+      "duplicateSuccess": "Element duplicated successfully",
+      "editMode": "Edit mode enabled",
+      "previewMode": "Preview mode enabled",
+      "designSaved": "Design saved successfully",
+      "htmlExported": "HTML exported successfully"
+    },
+    "header": {
+      "preview": "Preview",
+      "exportHTML": "Export HTML",
+      "saveDesign": "Save Design",
+      "title": "Builder",
+      "editDesign": "Edit Design"
+    }
+  },
+  "common": {
+    "yes": "Yes",
+    "no": "No"
+  }
+}
