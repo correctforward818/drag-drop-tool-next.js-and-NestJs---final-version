@@ -2,15 +2,33 @@
   "builder": {
     "components": {
       "title": "Components",
-      "column": { "label": "Column" },
-      "text": { "label": "Text" },
-      "button": { "label": "Button" },
-      "image": { "label": "Image" },
-      "divider": { "label": "Divider" },
-      "social": { "label": "Social" },
-      "menu": { "label": "Menu" },
-      "embedhtml": { "label": "HTML" },
-      "heading": { "label": "Heading" }
+      "column": {
+        "label": "Column"
+      },
+      "text": {
+        "label": "Text"
+      },
+      "button": {
+        "label": "Button"
+      },
+      "image": {
+        "label": "Image"
+      },
+      "divider": {
+        "label": "Divider"
+      },
+      "social": {
+        "label": "Social"
+      },
+      "menu": {
+        "label": "Menu"
+      },
+      "embedhtml": {
+        "label": "HTML"
+      },
+      "heading": {
+        "label": "Heading"
+      }
     },
     "properties": {
       "title": "Properties",
@@ -103,7 +121,7 @@
       "row": {
         "title": "Row Properties",
         "backgroundColor": "Background Color",
-        "columnsBackgroundColor": "Columns Background Color",
+        "columnsBackgroundColor": "Content Background Color",
         "backgroundImage": {
           "label": "Background Image",
           "url": "Image URL",

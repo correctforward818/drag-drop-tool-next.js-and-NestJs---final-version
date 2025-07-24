@@ -54,8 +54,8 @@ const Column: React.FC<ColumnProps> = ({ column, width, isPreviewMode }) => {
     return width
       ? `${width} ${style || "solid"} ${color || "#000"}`
       : column.contents.length === 0
-      ? "1px dashed rgb(96 165 250)"
-      : "none";
+        ? "1px dashed rgb(96 165 250)"
+        : "none";
   };
 
   // Compute styles object once
@@ -64,8 +64,8 @@ const Column: React.FC<ColumnProps> = ({ column, width, isPreviewMode }) => {
     backgroundColor: column.values.backgroundColor
       ? column.values.backgroundColor
       : column.contents.length === 0
-      ? "rgba(239, 246, 255, 0.3)"
-      : "transparent",
+        ? "rgba(239, 246, 255, 0.3)"
+        : "transparent",
     borderRadius: column.values.borderRadius || "0px",
     borderTop: getBorderStyle("Top"),
     borderRight: getBorderStyle("Right"),
@@ -86,9 +86,8 @@ const Column: React.FC<ColumnProps> = ({ column, width, isPreviewMode }) => {
       {column.contents.length === 0 ? (
         <>
           <div
-            className={`flex flex-col items-center justify-center h-full min-h-[100px] text-gray-500 p-5 ${
-              isOver ? "border-t-4 border-t-blue-400" : ""
-            }`}
+            className={`flex flex-col items-center justify-center h-full min-h-[100px] text-gray-500 p-5 ${isOver ? "border-t-4 border-t-blue-400" : ""
+              }`}
           >
             <p className="mb-2">Drop content here</p>
           </div>

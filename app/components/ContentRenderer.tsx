@@ -110,10 +110,10 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
                 : currentIndex.current - 1
               : currentIndex.current
             : columnId === item.columnId
-            ? item.currentIndex! >= currentIndex.current
-              ? currentIndex.current + 1
-              : currentIndex.current
-            : currentIndex.current + 1
+              ? item.currentIndex! >= currentIndex.current
+                ? currentIndex.current + 1
+                : currentIndex.current
+              : currentIndex.current + 1
         );
       },
       collect: (monitor) => ({
@@ -585,14 +585,14 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
                 content.values.align == "center"
                   ? "center"
                   : content.values.align == "right"
-                  ? "flex-end"
-                  : "flex-start",
+                    ? "flex-end"
+                    : "flex-start",
               alignItems:
                 content.values.align == "center"
                   ? "center"
                   : content.values.align == "right"
-                  ? "flex-end"
-                  : "flex-start",
+                    ? "flex-end"
+                    : "flex-start",
               flexDirection:
                 content.values.layout == "horizontal" ? "row" : "column",
               fontFamily: content.values.fontFamily?.value,
@@ -657,14 +657,14 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
                 content.values.align == "center"
                   ? "center"
                   : content.values.align == "right"
-                  ? "flex-end"
-                  : "flex-start",
+                    ? "flex-end"
+                    : "flex-start",
               alignItems:
                 content.values.align == "center"
                   ? "center"
                   : content.values.align == "right"
-                  ? "flex-end"
-                  : "flex-start",
+                    ? "flex-end"
+                    : "flex-start",
               flexDirection:
                 content.values.layout == "horizontal" ? "row" : "column",
               fontFamily: content.values.fontFamily?.value,
@@ -726,17 +726,15 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
           relative group
           ${content.values.selectable ? "cursor-pointer" : ""}
           ${content.values.draggable ? "cursor-move" : ""}
-          ${
-            isOver
-              ? isBeforeRef.current
-                ? "border-t-4 border-t-blue-400"
-                : "border-b-4 border-b-blue-400"
-              : ""
+          ${isOver
+            ? isBeforeRef.current
+              ? "border-t-4 border-t-blue-400"
+              : "border-b-4 border-b-blue-400"
+            : ""
           }
-          ${
-            selectedElement?.id === content.id
-              ? "outline outline-[#4DADFD]"
-              : ""
+          ${selectedElement?.id === content.id
+            ? "outline outline-[#4DADFD]"
+            : ""
           }
           hover:outline hover:outline-[#5DBDFD] hover:bg-[#0871C244]
         `}

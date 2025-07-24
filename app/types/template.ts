@@ -153,6 +153,7 @@ export interface ColumnValues {
     borderBottomColor?: string;
   };
   borderRadius?: string;
+  backgroundImageUrl?: string;
   _meta: {
     htmlID: string;
     htmlClassNames: string;

@@ -4,9 +4,15 @@ import type { ElementType, Row, Column } from "../../types/template";
 import { v4 as uuidv4 } from "uuid";
 import { useBuilder } from "../../hooks/useBuilder";
 import Collapse from "../Common/Collapse";
-import NumberInput from "../Common/NumberInput";
-import Switch from "../Common/Switch";
 import { QueueListIcon, ViewColumnsIcon } from "@heroicons/react/24/outline";
+import Border from "../Elements/Border";
+import Padding from "../Elements/Padding";
+import BackgroundColor from "../Elements/BackgroundColor";
+import BorderRound from "../Elements/BorderRound";
+import LabelInput from "../Elements/LabelInput";
+import StatusChange from "../Elements/StatusChange";
+import ContentAlignment from "../Elements/ContentAlignment";
+import ImageSection from "../Elements/ImageSection";
 
 interface ColumnPropertyPanelProps {
   selectedElement: { id: string; type: ElementType };
@@ -91,6 +97,7 @@ const ColumnPropertyPanel: React.FC<ColumnPropertyPanelProps> = ({
     },
   });
   const [borderMoreOptions, setBorderMoreOptions] = useState(false);
+  const [borderRoundMoreOptions, setBorderRoundMoreOptions] = useState(false);
   const [paddingMoreOptions, setPaddingMoreOptions] = useState(false);
 
   useEffect(() => {
@@ -115,7 +122,7 @@ const ColumnPropertyPanel: React.FC<ColumnPropertyPanelProps> = ({
             const key = `${colIndex}-${side}-${prop}`;
             const value =
               column.values.border?.[
-                `border${side}${prop}` as keyof typeof column.values.border
+              `border${side}${prop}` as keyof typeof column.values.border
               ] || "";
             newBorderInputs[key] = value;
           });
@@ -153,10 +160,12 @@ const ColumnPropertyPanel: React.FC<ColumnPropertyPanelProps> = ({
     const newColumns =
       currentElement.columns.length < cells.length
         ? [
-            ...currentElement.columns,
-            ...Array.from({
-              length: cells.length - currentElement.columns.length,
-            }).map(() => ({
+          ...currentElement.columns,
+          ...Array.from({
+            length: cells.length - currentElement.columns.length,
+          }).map((_, idx) => {
+            const newIndex = currentElement.columns.length + idx + 1;
+            return {
               id: uuidv4(),
               contents: [],
               values: {
@@ -165,12 +174,13 @@ const ColumnPropertyPanel: React.FC<ColumnPropertyPanelProps> = ({
                 border: {},
                 borderRadius: "0px",
                 _meta: {
-                  htmlID: "",
+                  htmlID: `u_column_${newIndex}`,
                   htmlClassNames: "",
                 },
               },
-            })),
-          ]
+            };
+          }),
+        ]
         : currentElement.columns.slice(0, cells.length);
 
     updateRow(currentElement.id, {
@@ -195,12 +205,12 @@ const ColumnPropertyPanel: React.FC<ColumnPropertyPanelProps> = ({
     const updatedColumns = currentElement.columns.map((col, idx) =>
       idx === columnIndex
         ? {
-            ...col,
-            values: {
-              ...col.values,
-              [key]: value,
-            },
-          }
+          ...col,
+          values: {
+            ...col.values,
+            [key]: value,
+          },
+        }
         : col
     );
 
@@ -267,10 +277,9 @@ const ColumnPropertyPanel: React.FC<ColumnPropertyPanelProps> = ({
               className={`
                 p-2 text-xs border rounded-md transition-all
                 hover:border-blue-500 hover:bg-blue-50
-                ${
-                  currentLayout?.id === layout.id
-                    ? "border-blue-500 bg-blue-50 text-blue-600"
-                    : "border-gray-200 text-gray-600"
+                ${currentLayout?.id === layout.id
+                  ? "border-blue-500 bg-blue-50 text-blue-600"
+                  : "border-gray-200 text-gray-600"
                 }
               `}
             >
@@ -310,10 +319,9 @@ const ColumnPropertyPanel: React.FC<ColumnPropertyPanelProps> = ({
                   key={index}
                   className={`
                     py-2 text-[10px] font-medium
-                    ${
-                      selectedColumnIndex === index
-                        ? "border-b-2 border-blue-500 text-blue-600"
-                        : "text-gray-500 hover:text-gray-700"
+                    ${selectedColumnIndex === index
+                      ? "border-b-2 border-blue-500 text-blue-600"
+                      : "text-gray-500 hover:text-gray-700"
                     }
                   `}
                   onClick={() => setSelectedColumnIndex(index)}
@@ -324,589 +332,123 @@ const ColumnPropertyPanel: React.FC<ColumnPropertyPanelProps> = ({
             </div>
 
             <div className="space-y-4 text-sm">
+              <LabelInput
+                label="Column Order"
+                value={`Column ${selectedColumnIndex + 1} of ${currentElement.columns.length}`}
+                readOnly
+              />
               <div className="flex gap-2 justify-between items-center">
-                <label className="block font-medium text-gray-700">
-                  {t("builder.properties.column.backgroundColor")}
-                </label>
-                <input
-                  type="color"
-                  value={
-                    currentElement.columns[selectedColumnIndex].values
-                      .backgroundColor
+                <BackgroundColor
+                  color={currentElement.columns[selectedColumnIndex].values.backgroundColor}
+                  onChange={(color) =>
+                    handleColumnValueChange(selectedColumnIndex, "backgroundColor", color)
                   }
-                  onChange={(e) =>
-                    handleColumnValueChange(
-                      selectedColumnIndex,
-                      "backgroundColor",
-                      e.target.value
-                    )
-                  }
-                  className="w-12 rounded-md border-gray-300"
+                  label={t("builder.properties.column.backgroundColor")}
                 />
               </div>
 
               <hr className="my-4" />
 
               <div>
-                <div className="flex justify-between items-center mb-4">
-                  <label className="text-sm font-medium text-gray-700">
-                    {t("builder.properties.sharedStyles.padding")}
-                  </label>
-                  <Switch
-                    checked={paddingMoreOptions}
-                    onChange={(checked) => {
-                      setPaddingMoreOptions(checked);
-
-                      const currentValue = parseInt(
-                        currentElement.columns[
-                          selectedColumnIndex
-                        ].values.padding.split(" ")[0]
-                      );
-
-                      if (!checked) {
-                        // Reset to single value when disabling more options
-                        handleColumnValueChange(
-                          selectedColumnIndex,
-                          "padding",
-                          `${currentValue}px`
-                        );
-                      } else {
-                        handleColumnValueChange(
-                          selectedColumnIndex,
-                          "padding",
-                          `${currentValue}px ${currentValue}px ${currentValue}px ${currentValue}px`
-                        );
-                      }
-                    }}
-                    label={t("builder.properties.general.moreOptions")}
-                  />
-                </div>
-                {!paddingMoreOptions ? (
-                  <div>
-                    <label className="block text-sm text-gray-600 mb-1">
-                      {t("builder.properties.general.allSides")}
-                    </label>
-                    <NumberInput
-                      value={parseInt(
-                        currentElement.columns[selectedColumnIndex].values
-                          .padding
-                      )}
-                      onChange={(value) =>
-                        handleColumnValueChange(
-                          selectedColumnIndex,
-                          "padding",
-                          `${value}px`
-                        )
-                      }
-                      min={0}
-                      max={100}
-                    />
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm text-gray-600 mb-1">
-                        {t("builder.properties.general.padding.top")}
-                      </label>
-                      <NumberInput
-                        value={parseInt(
-                          currentElement.columns[
-                            selectedColumnIndex
-                          ].values.padding.split(" ")[0]
-                        )}
-                        onChange={(value) => {
-                          const [_, right, bottom, left] =
-                            currentElement.columns[
-                              selectedColumnIndex
-                            ].values.padding.split(" ");
-                          handleColumnValueChange(
-                            selectedColumnIndex,
-                            "padding",
-                            `${value}px ${right} ${bottom} ${left}`
-                          );
-                        }}
-                        min={0}
-                        max={100}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm text-gray-600 mb-1">
-                        {t("builder.properties.general.padding.right")}
-                      </label>
-                      <NumberInput
-                        value={parseInt(
-                          currentElement.columns[
-                            selectedColumnIndex
-                          ].values.padding.split(" ")[1]
-                        )}
-                        onChange={(value) => {
-                          const [top, _, bottom, left] =
-                            currentElement.columns[
-                              selectedColumnIndex
-                            ].values.padding.split(" ");
-                          handleColumnValueChange(
-                            selectedColumnIndex,
-                            "padding",
-                            `${top} ${value}px ${bottom} ${left}`
-                          );
-                        }}
-                        min={0}
-                        max={100}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm text-gray-600 mb-1">
-                        {t("builder.properties.general.padding.bottom")}
-                      </label>
-                      <NumberInput
-                        value={parseInt(
-                          currentElement.columns[
-                            selectedColumnIndex
-                          ].values.padding.split(" ")[2]
-                        )}
-                        onChange={(value) => {
-                          const [top, right, _, left] =
-                            currentElement.columns[
-                              selectedColumnIndex
-                            ].values.padding.split(" ");
-
-                          handleColumnValueChange(
-                            selectedColumnIndex,
-                            "padding",
-                            `${top} ${right} ${value}px ${left}`
-                          );
-                        }}
-                        min={0}
-                        max={100}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm text-gray-600 mb-1">
-                        {t("builder.properties.general.padding.left")}
-                      </label>
-                      <NumberInput
-                        value={parseInt(
-                          currentElement.columns[
-                            selectedColumnIndex
-                          ].values.padding.split(" ")[3]
-                        )}
-                        onChange={(value) => {
-                          const [top, right, bottom, _] =
-                            currentElement.columns[
-                              selectedColumnIndex
-                            ].values.padding.split(" ");
-                          handleColumnValueChange(
-                            selectedColumnIndex,
-                            "padding",
-                            `${top} ${right} ${bottom} ${value}px`
-                          );
-                        }}
-                        min={0}
-                        max={100}
-                      />
-                    </div>
-                  </div>
-                )}
+                <Padding
+                  padding={currentElement.columns[selectedColumnIndex].values.padding}
+                  moreOptions={paddingMoreOptions}
+                  onChange={(value) =>
+                    handleColumnValueChange(selectedColumnIndex, "padding", value)
+                  }
+                  onToggleMoreOptions={setPaddingMoreOptions}
+                  label={t("builder.properties.sharedStyles.padding")}
+                  min={0}
+                  max={100}
+                />
               </div>
-
               <hr className="my-4" />
-
               <div>
-                <div className="flex justify-between items-center mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {t("builder.properties.sharedStyles.border.label")}
-                  </label>
-                  <Switch
-                    checked={borderMoreOptions}
-                    onChange={(checked) => {
-                      setBorderMoreOptions(checked);
-                      const currentWidth = parseInt(
-                        currentElement.columns[selectedColumnIndex].values
-                          .border.borderTopWidth
-                          ? currentElement.columns[
-                              selectedColumnIndex
-                            ].values.border.borderTopWidth.split(" ")[0]
-                          : "0"
-                      );
-                      const currentColor = currentElement.columns[
-                        selectedColumnIndex
-                      ].values.border.borderTopColor
-                        ? currentElement.columns[
-                            selectedColumnIndex
-                          ].values.border.borderTopColor.split(" ")[0]
-                        : "transparent";
-                      const currentStyle = currentElement.columns[
-                        selectedColumnIndex
-                      ].values.border.borderTopStyle
-                        ? currentElement.columns[
-                            selectedColumnIndex
-                          ].values.border.borderTopStyle.split(" ")[0]
-                        : "none";
-                      if (!checked) {
-                        handleColumnValueChange(selectedColumnIndex, "border", {
-                          borderTopWidth: `${currentWidth}px`,
-                          borderTopStyle: currentStyle,
-                          borderTopColor: currentColor,
-                          borderBottomWidth: `${currentWidth}px`,
-                          borderBottomStyle: currentStyle,
-                          borderBottomColor: currentColor,
-                          borderLeftWidth: `${currentWidth}px`,
-                          borderLeftStyle: currentStyle,
-                          borderLeftColor: currentColor,
-                          borderRightWidth: `${currentWidth}px`,
-                          borderRightStyle: currentStyle,
-                          borderRightColor: currentColor,
-                        });
+                <Border
+                  border={currentElement.columns[selectedColumnIndex].values.border || {}}
+                  moreOptions={borderMoreOptions}
+                  onChange={(border) =>
+                    handleColumnValueChange(selectedColumnIndex, "border", border)
+                  }
+                  onToggleMoreOptions={setBorderMoreOptions}
+                  label={t("builder.properties.sharedStyles.border.label")}
+                />
+              </div>
+              <div>
+                <BorderRound
+                  borderRound={
+                    typeof currentElement.columns[selectedColumnIndex].values.borderRadius === "string"
+                      ? {
+                        borderTopLeftRadius: currentElement.columns[selectedColumnIndex].values.borderRadius,
+                        borderTopRightRadius: currentElement.columns[selectedColumnIndex].values.borderRadius,
+                        borderBottomRightRadius: currentElement.columns[selectedColumnIndex].values.borderRadius,
+                        borderBottomLeftRadius: currentElement.columns[selectedColumnIndex].values.borderRadius,
                       }
-                    }}
-                    label={t("builder.properties.general.moreOptions")}
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  {!borderMoreOptions ? (
-                    <div className="flex flex-col gap-2">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        {t("builder.properties.general.allSides")}
-                      </label>
-                      <NumberInput
-                        value={parseInt(
-                          currentElement.columns[selectedColumnIndex].values
-                            .border.borderTopWidth || "0"
-                        )}
-                        onChange={(value) =>
-                          handleColumnValueChange(
-                            selectedColumnIndex,
-                            "border",
-                            {
-                              ...currentElement.columns[selectedColumnIndex]
-                                .values.border,
-                              borderTopWidth: `${value}px`,
-                              borderBottomWidth: `${value}px`,
-                              borderLeftWidth: `${value}px`,
-                              borderRightWidth: `${value}px`,
-                            }
-                          )
-                        }
-                      />
-                      <select
-                        value={
-                          currentElement.columns[selectedColumnIndex].values
-                            .border.borderTopStyle
-                        }
-                        onChange={(e) =>
-                          handleColumnValueChange(
-                            selectedColumnIndex,
-                            "border",
-                            {
-                              ...currentElement.columns[selectedColumnIndex]
-                                .values.border,
-                              borderTopStyle: e.target.value,
-                              borderBottomStyle: e.target.value,
-                              borderLeftStyle: e.target.value,
-                              borderRightStyle: e.target.value,
-                            }
-                          )
-                        }
-                        className="w-fit rounded-md border border-gray-300"
-                      >
-                        {BORDER_STYLES.map((style) => (
-                          <option key={style} value={style}>
-                            {style}
-                          </option>
-                        ))}
-                      </select>
-                      <input
-                        type="color"
-                        value={
-                          currentElement.columns[selectedColumnIndex].values
-                            .border.borderTopColor
-                        }
-                        onChange={(e) =>
-                          handleColumnValueChange(
-                            selectedColumnIndex,
-                            "border",
-                            {
-                              ...currentElement.columns[selectedColumnIndex]
-                                .values.border,
-                              borderTopColor: e.target.value,
-                              borderBottomColor: e.target.value,
-                              borderLeftColor: e.target.value,
-                              borderRightColor: e.target.value,
-                            }
-                          )
-                        }
-                        className="rounded-md border border-gray-300"
-                      />
-                    </div>
-                  ) : (
-                    <>
-                      <div className="flex flex-col gap-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t(
-                            "builder.properties.sharedStyles.border.positions.top"
-                          )}
-                        </label>
-                        <NumberInput
-                          value={parseInt(
-                            currentElement.columns[selectedColumnIndex].values
-                              .border.borderTopWidth || "0"
-                          )}
-                          onChange={(value) =>
-                            handleColumnValueChange(
-                              selectedColumnIndex,
-                              "border",
-                              {
-                                ...currentElement.columns[selectedColumnIndex]
-                                  .values.border,
-                                borderTopWidth: `${value}px`,
-                              }
-                            )
-                          }
-                        />
-                        <select
-                          value={
-                            currentElement.columns[selectedColumnIndex].values
-                              .border.borderTopStyle
-                          }
-                          onChange={(e) =>
-                            handleColumnValueChange(
-                              selectedColumnIndex,
-                              "border",
-                              {
-                                ...currentElement.columns[selectedColumnIndex]
-                                  .values.border,
-                                borderTopStyle: e.target.value,
-                              }
-                            )
-                          }
-                          className="w-fit rounded-md border border-gray-300"
-                        >
-                          {BORDER_STYLES.map((style) => (
-                            <option key={style} value={style}>
-                              {style}
-                            </option>
-                          ))}
-                        </select>
-                        <input
-                          type="color"
-                          value={
-                            currentElement.columns[selectedColumnIndex].values
-                              .border.borderTopColor
-                          }
-                          onChange={(e) =>
-                            handleColumnValueChange(
-                              selectedColumnIndex,
-                              "border",
-                              {
-                                ...currentElement.columns[selectedColumnIndex]
-                                  .values.border,
-                                borderTopColor: e.target.value,
-                              }
-                            )
-                          }
-                        />
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t(
-                            "builder.properties.sharedStyles.border.positions.right"
-                          )}
-                        </label>
-                        <NumberInput
-                          value={parseInt(
-                            currentElement.columns[selectedColumnIndex].values
-                              .border.borderRightWidth || "0"
-                          )}
-                          onChange={(value) =>
-                            handleColumnValueChange(
-                              selectedColumnIndex,
-                              "border",
-                              {
-                                ...currentElement.columns[selectedColumnIndex]
-                                  .values.border,
-                                borderRightWidth: `${value}px`,
-                              }
-                            )
-                          }
-                        />
-                        <select
-                          value={
-                            currentElement.columns[selectedColumnIndex].values
-                              .border.borderRightStyle
-                          }
-                          onChange={(e) =>
-                            handleColumnValueChange(
-                              selectedColumnIndex,
-                              "border",
-                              {
-                                ...currentElement.columns[selectedColumnIndex]
-                                  .values.border,
-                                borderRightStyle: e.target.value,
-                              }
-                            )
-                          }
-                          className="w-fit rounded-md border border-gray-300"
-                        >
-                          {BORDER_STYLES.map((style) => (
-                            <option key={style} value={style}>
-                              {style}
-                            </option>
-                          ))}
-                        </select>
-                        <input
-                          type="color"
-                          value={
-                            currentElement.columns[selectedColumnIndex].values
-                              .border.borderRightColor
-                          }
-                          onChange={(e) =>
-                            handleColumnValueChange(
-                              selectedColumnIndex,
-                              "border",
-                              {
-                                ...currentElement.columns[selectedColumnIndex]
-                                  .values.border,
-                                borderRightColor: e.target.value,
-                              }
-                            )
-                          }
-                        />
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t(
-                            "builder.properties.sharedStyles.border.positions.bottom"
-                          )}
-                        </label>
-                        <NumberInput
-                          value={parseInt(
-                            currentElement.columns[selectedColumnIndex].values
-                              .border.borderBottomWidth || "0"
-                          )}
-                          onChange={(value) =>
-                            handleColumnValueChange(
-                              selectedColumnIndex,
-                              "border",
-                              {
-                                ...currentElement.columns[selectedColumnIndex]
-                                  .values.border,
-                                borderBottomWidth: `${value}px`,
-                              }
-                            )
-                          }
-                        />
-                        <select
-                          value={
-                            currentElement.columns[selectedColumnIndex].values
-                              .border.borderBottomStyle
-                          }
-                          onChange={(e) =>
-                            handleColumnValueChange(
-                              selectedColumnIndex,
-                              "border",
-                              {
-                                ...currentElement.columns[selectedColumnIndex]
-                                  .values.border,
-                                borderBottomStyle: e.target.value,
-                              }
-                            )
-                          }
-                          className="w-fit rounded-md border border-gray-300"
-                        >
-                          {BORDER_STYLES.map((style) => (
-                            <option key={style} value={style}>
-                              {style}
-                            </option>
-                          ))}
-                        </select>
-                        <input
-                          type="color"
-                          value={
-                            currentElement.columns[selectedColumnIndex].values
-                              .border.borderBottomColor
-                          }
-                          onChange={(e) =>
-                            handleColumnValueChange(
-                              selectedColumnIndex,
-                              "border",
-                              {
-                                ...currentElement.columns[selectedColumnIndex]
-                                  .values.border,
-                                borderBottomColor: e.target.value,
-                              }
-                            )
-                          }
-                        />
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t(
-                            "builder.properties.sharedStyles.border.positions.left"
-                          )}
-                        </label>
-                        <NumberInput
-                          value={parseInt(
-                            currentElement.columns[selectedColumnIndex].values
-                              .border.borderLeftWidth || "0"
-                          )}
-                          onChange={(value) =>
-                            handleColumnValueChange(
-                              selectedColumnIndex,
-                              "border",
-                              {
-                                ...currentElement.columns[selectedColumnIndex]
-                                  .values.border,
-                                borderLeftWidth: `${value}px`,
-                              }
-                            )
-                          }
-                        />
-                        <select
-                          value={
-                            currentElement.columns[selectedColumnIndex].values
-                              .border.borderLeftStyle
-                          }
-                          onChange={(e) =>
-                            handleColumnValueChange(
-                              selectedColumnIndex,
-                              "border",
-                              {
-                                ...currentElement.columns[selectedColumnIndex]
-                                  .values.border,
-                                borderLeftStyle: e.target.value,
-                              }
-                            )
-                          }
-                          className="w-fit rounded-md border border-gray-300"
-                        >
-                          {BORDER_STYLES.map((style) => (
-                            <option key={style} value={style}>
-                              {style}
-                            </option>
-                          ))}
-                        </select>
-                        <input
-                          type="color"
-                          value={
-                            currentElement.columns[selectedColumnIndex].values
-                              .border.borderLeftColor
-                          }
-                          onChange={(e) =>
-                            handleColumnValueChange(
-                              selectedColumnIndex,
-                              "border",
-                              {
-                                ...currentElement.columns[selectedColumnIndex]
-                                  .values.border,
-                                borderLeftColor: e.target.value,
-                              }
-                            )
-                          }
-                        />
-                      </div>
-                    </>
-                  )}
-                </div>
+                      : currentElement.columns[selectedColumnIndex].values.borderRadius || {}
+                  }
+                  moreOptions={borderRoundMoreOptions}
+                  onChange={(border) =>
+                    handleColumnValueChange(selectedColumnIndex, "borderRadius", border)
+                  }
+                  onToggleMoreOptions={setBorderRoundMoreOptions}
+                />
+              </div>
+              <div>
+                <LabelInput
+                  label="HTML ID"
+                  value={
+                    currentElement.columns[selectedColumnIndex].values._meta?.htmlID?.trim()
+                      ? currentElement.columns[selectedColumnIndex].values._meta.htmlID
+                      : `u_column_${selectedColumnIndex + 1}`
+                  }
+                  onChange={(val) =>
+                    handleColumnValueChange(selectedColumnIndex, "_meta", {
+                      ...currentElement.columns[selectedColumnIndex].values._meta,
+                      htmlID: val,
+                    })
+                  }
+                  placeholder={`u_column_${selectedColumnIndex + 1}`}
+                />
+                <hr className="my-6" />
+                <LabelInput
+                  label="HTML Class Names"
+                  value={currentElement.columns[selectedColumnIndex].values._meta?.htmlClassNames || ""}
+                  onChange={(val) =>
+                    handleColumnValueChange(selectedColumnIndex, "_meta", {
+                      ...currentElement.columns[selectedColumnIndex].values._meta,
+                      htmlClassNames: val,
+                    })
+                  }
+                  placeholder="Enter HTML Class Names"
+                />
+
+                <hr className="my-6" />
+
+                <StatusChange
+                  label="Deletable"
+                  value={
+                    currentElement.columns[selectedColumnIndex].values._meta?.deletable ?? true
+                  }
+                  onChange={(value) =>
+                    handleColumnValueChange(selectedColumnIndex, "_meta", {
+                      ...currentElement.columns[selectedColumnIndex].values._meta,
+                      deletable: value,
+                    })
+                  }
+                />
+                <hr className="my-6" />
+                <StatusChange
+                  label="Blocked"
+                  value={
+                    currentElement.columns[selectedColumnIndex].values._meta?.blocked ?? false
+                  }
+                  onChange={(value) =>
+                    handleColumnValueChange(selectedColumnIndex, "_meta", {
+                      ...currentElement.columns[selectedColumnIndex].values._meta,
+                      blocked: value,
+                    })
+                  }
+                />
               </div>
             </div>
           </>
@@ -920,158 +462,45 @@ const ColumnPropertyPanel: React.FC<ColumnPropertyPanelProps> = ({
       >
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              {t("builder.properties.row.backgroundColor")}
-            </label>
-            <input
-              type="color"
-              value={rowInputs.backgroundColor}
-              onChange={(e) =>
-                handleRowInputChange("backgroundColor", e.target.value)
-              }
-              className="w-12 rounded-md border-gray-300"
+            <BackgroundColor
+              color={rowInputs.backgroundColor}
+              onChange={(color) => handleRowInputChange("backgroundColor", color)}
+              label={t("builder.properties.row.backgroundColor")}
             />
           </div>
 
           <hr className="my-4" />
 
           <div className="flex justify-between items-center">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              {t("builder.properties.row.columnsBackgroundColor")}
-            </label>
-            <input
-              type="color"
-              value={rowInputs.columnsBackgroundColor}
-              onChange={(e) =>
-                handleRowInputChange("columnsBackgroundColor", e.target.value)
-              }
-              className="w-12 rounded-md border-gray-300"
+            <BackgroundColor
+              color={rowInputs.columnsBackgroundColor}
+              onChange={(color) => handleRowInputChange("columnsBackgroundColor", color)}
+              label={t("builder.properties.row.columnsBackgroundColor")}
             />
           </div>
 
           <hr className="my-4" />
 
           <div>
-            <div className="flex justify-between items-center mb-4">
-              <label className="text-sm font-medium text-gray-700">
-                {t("builder.properties.sharedStyles.padding")}
-              </label>
-              <Switch
-                checked={paddingMoreOptions}
-                onChange={(checked) => {
-                  setPaddingMoreOptions(checked);
-
-                  const currentValue = parseInt(
-                    rowInputs.padding.split(" ")[0]
-                  );
-
-                  if (!checked) {
-                    // Reset to single value when disabling more options
-                    handleRowInputChange("padding", `${currentValue}px`);
-                  } else {
-                    handleRowInputChange(
-                      "padding",
-                      `${currentValue}px ${currentValue}px ${currentValue}px ${currentValue}px`
-                    );
-                  }
-                }}
-                label={t("builder.properties.general.moreOptions")}
-              />
-            </div>
-            {!paddingMoreOptions ? (
-              <div>
-                <label className="block text-sm text-gray-600 mb-1">
-                  {t("builder.properties.general.allSides")}
-                </label>
-                <NumberInput
-                  value={parseInt(rowInputs.padding)}
-                  onChange={(value) =>
-                    handleRowInputChange("padding", `${value}px`)
-                  }
-                  min={0}
-                  max={100}
-                />
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm text-gray-600 mb-1">
-                    {t("builder.properties.general.padding.top")}
-                  </label>
-                  <NumberInput
-                    value={parseInt(rowInputs.padding.split(" ")[0])}
-                    onChange={(value) => {
-                      const [_, right, bottom, left] =
-                        rowInputs.padding.split(" ");
-                      handleRowInputChange(
-                        "padding",
-                        `${value}px ${right} ${bottom} ${left}`
-                      );
-                    }}
-                    min={0}
-                    max={100}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm text-gray-600 mb-1">
-                    {t("builder.properties.general.padding.right")}
-                  </label>
-                  <NumberInput
-                    value={parseInt(rowInputs.padding.split(" ")[1])}
-                    onChange={(value) => {
-                      const [top, _, bottom, left] =
-                        rowInputs.padding.split(" ");
-                      handleRowInputChange(
-                        "padding",
-                        `${top} ${value}px ${bottom} ${left}`
-                      );
-                    }}
-                    min={0}
-                    max={100}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm text-gray-600 mb-1">
-                    {t("builder.properties.general.padding.bottom")}
-                  </label>
-                  <NumberInput
-                    value={parseInt(rowInputs.padding.split(" ")[2])}
-                    onChange={(value) => {
-                      const [top, right, _, left] =
-                        rowInputs.padding.split(" ");
-
-                      handleRowInputChange(
-                        "padding",
-                        `${top} ${right} ${value}px ${left}`
-                      );
-                    }}
-                    min={0}
-                    max={100}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm text-gray-600 mb-1">
-                    {t("builder.properties.general.padding.left")}
-                  </label>
-                  <NumberInput
-                    value={parseInt(rowInputs.padding.split(" ")[3])}
-                    onChange={(value) => {
-                      const [top, right, bottom, _] =
-                        rowInputs.padding.split(" ");
-                      handleRowInputChange(
-                        "padding",
-                        `${top} ${right} ${bottom} ${value}px`
-                      );
-                    }}
-                    min={0}
-                    max={100}
-                  />
-                </div>
-              </div>
-            )}
+            <Padding
+              padding={rowInputs.padding}
+              moreOptions={paddingMoreOptions}
+              onChange={(value) => handleRowInputChange("padding", value)}
+              onToggleMoreOptions={setPaddingMoreOptions}
+              label={t("builder.properties.sharedStyles.padding")}
+              min={0}
+              max={100}
+            />
           </div>
 
           <hr className="my-4" />
+
+
+          <ImageSection
+            image={rowInputs.backgroundImage.url}
+            onImageChange={(file) => handleBackgroundImageChange("url", file)}
+            onUrlChange={(url) => handleBackgroundImageChange("url", url)}
+          />
 
           <div className="space-y-4 mt-4">
             <label className="block text-sm font-medium text-gray-700">
